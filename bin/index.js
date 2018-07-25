@@ -81,7 +81,7 @@ module.exports.authenticate = function(token_filename,email, password){
     console.log(chalk.yellow.bold("Fetching user pool..."));
     var options = {
         method: 'GET',
-        url: 'https://polly.elucidata.io/userpool',
+        url: 'http://testpolly.elucidata.io/userpool',
         json: true
     };
 
@@ -144,7 +144,7 @@ module.exports.createProject = function (token_filename,name) {
     }
     var options = {
         method: 'POST',
-        url: 'https://polly.elucidata.io/api/project',
+        url: 'http://testpolly.elucidata.io/api/project',
         headers:
             {
                 'cache-control': 'no-cache',
@@ -229,7 +229,7 @@ module.exports.shareProject = function (token_filename,project_id,permission,use
     }
     var options = {
         method: 'POST',
-        url: 'https://polly.elucidata.io/api/sharing/share_project',
+        url: 'http://testpolly.elucidata.io/api/sharing/share_project',
         headers:
             {
                 'cache-control': 'no-cache',
@@ -262,7 +262,7 @@ module.exports.get_upload_Project_urls = function (token_filename,id) {
     }
     var options = {
         method: 'GET',
-        url: 'https://polly.elucidata.io/api/project',
+        url: 'http://testpolly.elucidata.io/api/project',
         headers:
             {
                 'cache-control': 'no-cache',
@@ -297,7 +297,7 @@ module.exports.get_Project_names = function (token_filename) {
     }
     var options = {
         method: 'GET',
-        url: 'https://polly.elucidata.io/api/project',
+        url: 'http://testpolly.elucidata.io/api/project',
         headers:
             {
                 'cache-control': 'no-cache',
@@ -329,7 +329,7 @@ module.exports.get_organizational_databases = function (token_filename,organizat
     }
     var options = {
         method: 'GET',
-        url: 'https://polly.elucidata.io/api/project',
+        url: 'http://testpolly.elucidata.io/api/project',
         headers:
             {
                 'cache-control': 'no-cache',
@@ -363,7 +363,7 @@ module.exports.get_Project_files = function (token_filename,id) {
     }
     var options = {
         method: 'GET',
-        url: 'https://polly.elucidata.io/api/project',
+        url: 'http://testpolly.elucidata.io/api/project',
         headers:
             {
                 'cache-control': 'no-cache',
