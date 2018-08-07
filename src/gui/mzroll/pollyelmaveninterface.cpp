@@ -279,7 +279,7 @@ QString PollyElmavenInterfaceDialog::uploadDataToPolly()
     QCoreApplication::processEvents();
     if (!patch_ids.isEmpty()){
         upload_status->setText("");
-        QString redirection_url = QString("https://polly.elucidata.io/main#project=%1&auto-redirect=firstview&elmavenTimestamp=%2").arg(upload_project_id).arg(datetimestamp);
+        QString redirection_url = QString("http://testpolly.elucidata.io/main#project=%1&auto-redirect=firstview&elmavenTimestamp=%2").arg(upload_project_id).arg(datetimestamp);
         qDebug()<<"redirection_url     - "<<redirection_url;
         pollyURL.setUrl(redirection_url);
         pollyButton->setVisible(true);
