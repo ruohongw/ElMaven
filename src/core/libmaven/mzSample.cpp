@@ -453,7 +453,7 @@ void mzSample::parseMzMLSpectrumList(const xml_node &spectrumList)
 		 spectrum; spectrum = spectrum.next_sibling("spectrum"))
 	{
 		string spectrumId = spectrum.attribute("id").value();
-		cerr << "Processing: " << spectrumId << endl;
+		//cerr << "Processing: " << spectrumId << endl;
 
 		if (spectrum.empty())
 			continue;
@@ -529,7 +529,7 @@ void mzSample::parseMzMLSpectrumList(const xml_node &spectrumList)
 			}
 		}
 
-		cerr << " scan=" << scannum << "\tms=" << mslevel << "\tprecMz" << precursorMz << "\t rt=" << rt << endl;
+		//cerr << " scan=" << scannum << "\tms=" << mslevel << "\tprecMz" << precursorMz << "\t rt=" << rt << endl;
 		Scan *scan = new Scan(this, scannum++, mslevel, rt, precursorMz, scanpolarity);
 		scan->productMz = productMz;
 		scan->filterLine = spectrumId;
@@ -664,7 +664,6 @@ xml_node mzSample::getmzXMLSpectrumData(xml_document &doc, const char *filename)
 	//but then it might have scan which contain the data
 	if (spectrumstore.empty())
 	{
-		cerr << "This is here" << endl;
 		//Getting the first child named "scan"
 		xml_node scan = doc.first_child().child("scan");
 		//If scan is not present then there is no data
@@ -672,7 +671,6 @@ xml_node mzSample::getmzXMLSpectrumData(xml_document &doc, const char *filename)
 		//mzXML file
 		if (!scan.empty())
 		{
-			cerr << "This is here1" << endl;
 			spectrumstore = doc.first_child();
 		}
 		else
@@ -1245,9 +1243,9 @@ EIC *mzSample::getEIC(float precursorMz, float collisionEnergy, float productMz,
 			e->intensity[j] *= scale;
 		}
 
-	if (e->size() == 0)
-		cerr << "getEIC(Q1,CE,Q3): is empty" << precursorMz << " " << collisionEnergy << " " << productMz << endl;
-	std::cerr << "getEIC(Q1,CE,Q3): srm" << precursorMz << " " << e->intensity.size() << endl;
+	//if (e->size() == 0)
+	//	cerr << "getEIC(Q1,CE,Q3): is empty" << precursorMz << " " << collisionEnergy << " " << productMz << endl;
+	//std::cerr << "getEIC(Q1,CE,Q3): srm" << precursorMz << " " << e->intensity.size() << endl;
 	return e;
 }
 
@@ -1350,9 +1348,9 @@ EIC *mzSample::getEIC(string srm, int eicType)
 		{
 			e->intensity[j] *= scale;
 		}
-	if (e->size() == 0)
-		cerr << "getEIC(SRM STRING): is empty" << srm << endl;
-	std::cerr << "getEIC: srm" << srm << " " << e->intensity.size() << endl;
+	//if (e->size() == 0)
+	//	cerr << "getEIC(SRM STRING): is empty" << srm << endl;
+	//std::cerr << "getEIC: srm" << srm << " " << e->intensity.size() << endl;
 
 	return e;
 }
@@ -1412,8 +1410,8 @@ EIC *mzSample::getEIC(float mzmin, float mzmax, float rtmin, float rtmax, int ms
 	float scale = getNormalizationConstant();
 	e->normalizeIntensityPerScan(scale);
 
-	if (e->size() == 0)
-		cerr << "getEIC(mzrange,rtrange,mslevel): is empty" << mzmin << " " << mzmax << " " << rtmin << " " << rtmax << endl;
+	//if (e->size() == 0)
+	//	cerr << "getEIC(mzrange,rtrange,mslevel): is empty" << mzmin << " " << mzmax << " " << rtmin << " " << rtmax << endl;
 
 	return (e);
 }
