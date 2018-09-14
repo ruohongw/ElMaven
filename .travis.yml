@@ -9,7 +9,9 @@ matrix:
           packages:
             - g++-5
       env:
-         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+        global:
+            - CC_TEST_REPORTER_ID=d8f511c602a3e3ab88d5f45196f8c3eae83152660f9c89ccdd2db4983a3911a2
+            - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
 #os: linux
 dist: trusty
@@ -24,6 +26,12 @@ before_install:
 
 sudo: required
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+
 script:
   - export QT_SELECT=qt5
   - export CXX="g++-5"
@@ -36,3 +44,7 @@ script:
   - qmake -qt=qt5 CONFIG+=release -o Makefile build.pro
   - make -j4
   - ./bin/MavenTests -xml
+
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
