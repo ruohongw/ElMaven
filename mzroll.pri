@@ -1,14 +1,3 @@
-CONFIG(debug, debug|release){
-    message("running in debug mode  ")
-    unix:!macx {
-        QMAKE_CCFLAGS+= -fprofile-arcs -ftest-coverage
-        QMAKE_CXXFLAGS+= -fprofile-arcs -ftest-coverage
-        QMAKE_LFLAGS+= -fprofile-arcs -ftest-coverage
-        MOC_DIR=tmp/
-        OBJECTS_DIR=tmp/
-    }
-}
-
 QT += sql core  xml gui opengl
 
 CONFIG += silent exceptions
@@ -28,6 +17,8 @@ unix: {
     QMAKE_LFLAGS += -L/usr/local/lib/ -L$$top_builddir/libs/
     LIBS +=  -lboost_signals -lErrorHandling -lobiwarp
 }
+
+QMAKE_LFLAGS += -lgcov --coverage
 
 #INSTALL_LIBDIR = $$(INSTALL_LIBDIR)
 #unix {

@@ -1,3 +1,15 @@
+CONFIG(debug, debug|release){
+    message("running in debug mode  ")
+    unix:!macx {
+        QMAKE_CCFLAGS+= -fprofile-arcs -ftest-coverage
+        QMAKE_CXXFLAGS+= -fprofile-arcs -ftest-coverage
+        QMAKE_LFLAGS+= -fprofile-arcs -ftest-coverage
+        QMAKE_LFLAGS += -lgcov --coverage
+#        MOC_DIR=tmp/
+#        OBJECTS_DIR=tmp/
+    }
+}
+
 MOC_DIR=$$top_builddir/tmp/maven/
 OBJECTS_DIR=$$top_builddir/tmp/maven/
 include($$mzroll_pri)
@@ -11,7 +23,7 @@ CONFIG += staticlib warn_off console silent
 
 QMAKE_CXXFLAGS +=  -std=c++11
 QMAKE_CXXFLAGS += -DOMP_PARALLEL
-linux: QMAKE_CXXFLAGS += -Ofast -ffast-math
+#linux: QMAKE_CXXFLAGS += -Ofast -ffast-math
 win32: QMAKE_CXXFLAGS += -Ofast -ffast-math
 !macx: QMAKE_CXXFLAGS += -fopenmp
 !macx: LIBS += -fopenmp
