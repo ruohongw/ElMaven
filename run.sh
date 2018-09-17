@@ -17,12 +17,23 @@ if [ -f tests/MavenTests/test.xml ]; then
 fi
 
 if [ -f ./bin/MavenTests ]; then
+	echo "Running tests"
 	./bin/MavenTests -xml
 fi
 
-type="$(uname)"
-systemType="$(echo "$type"  |  tr '[:upper:]'  '[:lower:]')"
-if [ $systemType == "linux" ] && [ $flag == 10 ]; then
-    lcov -b src/core/libmaven/ --capture --directory ../build/tmp/maven/ --output-file  coverage/lcov.info  --no-external &>/dev/null
-fi
-
+#type="$(uname)"
+#systemType="$(echo "$type"  |  tr '[:upper:]'  '[:lower:]')"
+#if [ $systemType == "linux" ] && [ $flag == 10 ]; then
+#    lcov -b src/core/libmaven/ --capture --directory ../build/tmp/maven/ --output-file  coverage/lcov.info  --no-external &>/dev/null
+#fi
+#
+#if [ "$TRAVIS" = true ]; then 
+#    echo "On Travis: Generating lcov report"
+#    lcov -b src/core/libmaven/ --capture --directory ../build/tmp/maven/ --output-file  coverage/lcov.info  --no-external
+#
+#else
+#    echo "TRAVIS check failed. Generating lcov report anyway"
+#    lcov -b src/core/libmaven/ --capture --directory ../build/tmp/maven/ --output-file  coverage/lcov.info  --no-external
+#
+#fi
+#
