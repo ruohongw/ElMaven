@@ -43,6 +43,7 @@ script:
   - gcc -v
   - qmake -qt=qt5 -v
   - echo no | ./run.sh
+  - mkdir coverage
   - lcov -b src/core/libmaven/ --capture --directory ../build/tmp/maven/ --output-file  coverage/lcov.info  --no-external
 
 after_script:
