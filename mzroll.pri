@@ -1,5 +1,5 @@
-ON_TRAVIS=$$(TRAVIS)
 QT += sql core  xml gui opengl
+
 
 CONFIG += silent exceptions
 
