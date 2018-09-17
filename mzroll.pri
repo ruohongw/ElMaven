@@ -1,3 +1,4 @@
+ON_TRAVIS=$$(TRAVIS)
 QT += sql core  xml gui opengl
 
 CONFIG += silent exceptions
@@ -18,8 +19,12 @@ unix: {
     LIBS +=  -lboost_signals -lErrorHandling -lobiwarp
 }
 
-QMAKE_LFLAGS += -lgcov --coverage
 
+!isEmpty(ON_TRAVIS) {
+
+    message("linking with gcov")
+    QMAKE_LFLAGS += -lgcov --coverage
+}
 #INSTALL_LIBDIR = $$(INSTALL_LIBDIR)
 #unix {
 #  !mac {

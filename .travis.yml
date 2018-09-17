@@ -41,10 +41,8 @@ script:
   - g++ -v
   - gcc -v
   - qmake -qt=qt5 -v
-  - qmake -qt=qt5 CONFIG+=release -o Makefile build.pro
-  - make -j4
-  - ./bin/MavenTests -xml
+  - echo no | ./run.sh 
 
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build -t lcov

@@ -23,7 +23,6 @@ fi
 type="$(uname)"
 systemType="$(echo "$type"  |  tr '[:upper:]'  '[:lower:]')"
 if [ $systemType == "linux" ] && [ $flag == 10 ]; then
-    lcov --capture --directory ./ --output-file ../coverage.info --no-external
-    genhtml ../coverage.info --output-directory ../coverage
+    lcov -b src/core/libmaven/ --capture --directory ../build/tmp/maven/ --output-file  coverage/lcov.info  --no-external &>/dev/null
 fi
 

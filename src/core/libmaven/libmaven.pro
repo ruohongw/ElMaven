@@ -1,12 +1,12 @@
-CONFIG(debug, debug|release){
-    message("running in debug mode  ")
-    unix:!macx {
-        QMAKE_CCFLAGS+= -fprofile-arcs -ftest-coverage
-        QMAKE_CXXFLAGS+= -fprofile-arcs -ftest-coverage
-        QMAKE_LFLAGS+= -fprofile-arcs -ftest-coverage
-        QMAKE_LFLAGS += -lgcov --coverage
-#        MOC_DIR=tmp/
-#        OBJECTS_DIR=tmp/
+!isEmpty(ON_TRAVIS) {
+    CONFIG(debug, debug|release) {
+	message("adding gcov compiler flags")
+	unix:!macx {
+	    QMAKE_CCFLAGS+= -fprofile-arcs -ftest-coverage
+	    QMAKE_CXXFLAGS+= -fprofile-arcs -ftest-coverage
+	    QMAKE_LFLAGS+= -fprofile-arcs -ftest-coverage
+	    QMAKE_LFLAGS += -lgcov --coverage
+	}
     }
 }
 
