@@ -19,34 +19,32 @@ language: cpp
 compiler: gcc-5
 group: deprecated-2017Q2
 
-before_install:
+before_install: 
+  - sudo apt-get install -qq qt5-qmake qtbase5-dev qtscript5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev libboost-all-dev libnetcdf-dev
   - sudo apt-add-repository "deb http://in.archive.ubuntu.com/ubuntu/ xenial universe"
   - sudo apt-get update -qq
-  
- # - sudo apt-get install -qq qt5-qmake qtbase5-dev qtscript5-dev qtdeclarative5-dev libqt5webkit5-dev libsqlite3-dev libboost-all-dev libnetcdf-dev
-  - sudo apt-cache policy lcov
   - sudo apt-get -t xenial -qq install lcov
   - eval "${MATRIX_EVAL}"
 
 sudo: required
 
 before_script:
-  #- curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  #- chmod +x ./cc-test-reporter
-  #- ./cc-test-reporter before-build
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 script:
-  #- export QT_SELECT=qt5
-  #- export CXX="g++-5"
-  #- export CC="gcc-5"
-#  - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
-#  - sudo unlink /usr/bin/g++ && sudo ln -s /usr/bin/g++-5 /usr/bin/g++
-#  - g++ -v
-#  - gcc -v
-#  - qmake -qt=qt5 -v
-#  - echo no | ./run.sh
-#  - mkdir coverage
-#  - lcov -b src/core/libmaven/ --capture --directory ../build/tmp/maven/ --output-file  coverage/lcov.info  --no-external
-#
+  - export QT_SELECT=qt5
+  - export CXX="g++-5"
+  - export CC="gcc-5"
+  - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
+  - sudo unlink /usr/bin/g++ && sudo ln -s /usr/bin/g++-5 /usr/bin/g++
+  - g++ -v
+  - gcc -v
+  - qmake -qt=qt5 -v
+  - echo no | ./run.sh
+  - mkdir coverage
+  - lcov -b src/core/libmaven/ --capture --directory ../build/tmp/maven/ --output-file  coverage/lcov.info  --no-external
+
 after_script:
-  #- ./cc-test-reporter after-build -t lcov
+  - ./cc-test-reporter after-build -t lcov
