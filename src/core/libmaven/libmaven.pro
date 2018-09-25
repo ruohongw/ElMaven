@@ -15,6 +15,18 @@ QMAKE_CXXFLAGS += -DOMP_PARALLEL
 !macx: QMAKE_CXXFLAGS += -fopenmp
 !macx: LIBS += -fopenmp
 
+!isEmpty(ON_TRAVIS) {
+    CONFIG(debug, debug|release) {
+        message("adding gcov compiler flags")
+        unix:!macx {
+            QMAKE_CCFLAGS += -fprofile-arcs -ftest-coverage
+            QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage
+            QMAKE_LFLAGS += -fprofile-arcs -ftest-coverage
+            QMAKE_LFLAGS += -lgcov --coverage
+        }
+    }
+}
+
 TARGET = maven
 
 LIBS += -L. -lcsvparser -ldate -lErrorHandling
