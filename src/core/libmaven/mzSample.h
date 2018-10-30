@@ -254,9 +254,8 @@ class mzSample
     /**
     * @brief Parse scan in mzXml file format
     * @param scan xml_node object of pugixml library
-    * @param scannum scan number
     */
-    void parseMzXMLScan(const xml_node &scan, const int& scannum);
+    void parseMzXMLScan(const xml_node &scan);
 
     /**
     * @brief Write mzCSV file

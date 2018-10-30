@@ -76,7 +76,6 @@ void mzSample::addScan(Scan *s)
 	//cerr << "addScan " << sizeBefore <<  " " << sizeAfter1 << " " << sizeAfter2 << " " << sizeAfter3 << endl;
 
 	scans.push_back(s);
-	s->scannum = scans.size() - 1;
 }
 
 string mzSample::getFileName(const string &filename)
@@ -193,8 +192,6 @@ void mzSample::parseMzCSV(const char *filename)
 	std::string line;
 	std::string polarity;
 
-	int lastScanNum = -1;
-	int scannum = 0;
 	float rt = 0;
 	float intensity = 0;
 	float mz = 0;
@@ -202,7 +199,6 @@ void mzSample::parseMzCSV(const char *filename)
 	int mslevel = 0;
 
 	Scan *scan = NULL;
-	int newscannum = 0;
 
 	while (getline(myfile, line))
 	{
@@ -214,19 +210,17 @@ void mzSample::parseMzCSV(const char *filename)
 
 			ss.clear();
 
-			ss << fields[0] << " "
-			   << fields[1] << " "
+			ss << fields[1] << " "
 			   << fields[2] << " "
 			   << fields[3] << " "
 			   << fields[4] << " "
 			   << fields[5] << " "
 			   << fields[6];
 
-			ss >> scannum >> rt >> mz >> intensity >> mslevel >> precursorMz >> polarity;
+			ss >> rt >> mz >> intensity >> mslevel >> precursorMz >> polarity;
 
-			if (scannum != lastScanNum)
+			if (!scan)
 			{
-				newscannum++;
 				if (mslevel <= 0)
 					mslevel = 1;
 				int scanpolarity = 0;
@@ -236,7 +230,7 @@ void mzSample::parseMzCSV(const char *filename)
 					scanpolarity = 1;
 				if (!polarity.empty() && polarity[0] == '-')
 					scanpolarity = -1;
-				scan = new Scan(this, newscannum, mslevel, rt / 60, precursorMz, scanpolarity);
+				scan = new Scan(this, scans.size(), mslevel, rt / 60, precursorMz, scanpolarity);
 				if (mslevel > 1)
 					scan->productMz = mz;
 
@@ -247,7 +241,6 @@ void mzSample::parseMzCSV(const char *filename)
 
 			scan->mz.push_back(mz);
 			scan->intensity.push_back(intensity);
-			lastScanNum = scannum;
 		}
 	}
 }
@@ -396,7 +389,7 @@ void mzSample::parseMzMLChromatogramList(const xml_node &chromatogramList)
 			int mslevel = 2; //naman The scope of the variable 'mslevel' can be reduced.
 			for (unsigned int i = 0; i < timeVector.size(); i++)
 			{
-				Scan *scan = new Scan(this, scannum++, mslevel, timeVector[i], precursorMz, -1);
+				Scan *scan = new Scan(this, scans.size(), mslevel, timeVector[i], precursorMz, -1);
 				scan->productMz = productMz;
 				scan->mz.push_back(productMz);
 				scan->filterLine = chromatogramId;
@@ -447,7 +440,6 @@ void mzSample::parseMzMLSpectrumList(const xml_node &spectrumList)
 {
 
 	//Iterate through spectrums
-	int scannum = 0;
 
 	for (xml_node spectrum = spectrumList.child("spectrum");
 		 spectrum; spectrum = spectrum.next_sibling("spectrum"))
@@ -528,8 +520,8 @@ void mzSample::parseMzMLSpectrumList(const xml_node &spectrumList)
 			}
 		}
 
-		cerr << " scan=" << scannum << "\tms=" << mslevel << "\tprecMz" << precursorMz << "\t rt=" << rt << endl;
-		Scan *scan = new Scan(this, scannum++, mslevel, rt, precursorMz, scanpolarity);
+		cerr << " scan=" << scans.size() << "\tms=" << mslevel << "\tprecMz" << precursorMz << "\t rt=" << rt << endl;
+		Scan *scan = new Scan(this, scans.size(), mslevel, rt, precursorMz, scanpolarity);
 		scan->productMz = productMz;
 		scan->filterLine = spectrumId;
 		scan->intensity = intsVector;
@@ -570,12 +562,10 @@ void mzSample::parseMzData(const char *filename)
 	xml_node spectrumstore = doc.first_child().child("spectrumList");
 
 	//Iterate through spectrums
-	int scannum = 0;
 
 	for (xml_node spectrum = spectrumstore.child("spectrum"); spectrum; spectrum = spectrum.next_sibling("spectrum"))
 	{
 
-		scannum++;
 		float rt = 0;
 		float precursorMz = 0;
 		char scanpolarity = 0; //default case
@@ -619,6 +609,7 @@ void mzSample::parseMzData(const char *filename)
 
 		int precision1 = spectrum.child("intenArrayBinary").child("data").attribute("precision").as_int();
 		string b64intensity = spectrum.child("intenArrayBinary").child("data").child_value();
+		Scan *scan = new Scan(this, scans.size(), mslevel, rt, precursorMz, scanpolarity);
 		scan->intensity = base64::decode_base64(
 			b64intensity, precision1 / 8, false, false);
 
@@ -633,8 +624,7 @@ void mzSample::parseMzData(const char *filename)
 			base64::decode_base64(b64mz, precision2 / 8, false, false);
 		
 		if (scan->mz.empty() || scan->intensity.empty()) continue;
-		
-		Scan *scan = new Scan(this, scannum, mslevel, rt, precursorMz, scanpolarity);
+				
 		addScan(scan);
 
 		//cout << "spectrum " << spectrum.attribute("title").value() << endl;
@@ -709,22 +699,19 @@ void mzSample::setInstrumentSettigs(xml_document &doc, xml_node spectrumstore)
 void mzSample::parseMzXMLData(const xml_node& spectrumstore)
 {
 	//Iterate through spectrums
-	int scannum = 0;
 
 	for (xml_node scan = spectrumstore.child("scan"); scan; scan = scan.next_sibling("scan"))
 	{
-		scannum++;
 		if (strncasecmp(scan.name(), "scan", 4) == 0)
 		{
-			parseMzXMLScan(scan, scannum);
+			parseMzXMLScan(scan);
 		}
 
 		for (xml_node child = scan.first_child(); child; child = child.next_sibling())
 		{
-			scannum++;
 			if (strncasecmp(child.name(), "scan", 4) == 0)
 			{
-				parseMzXMLScan(child, scannum);
+				parseMzXMLScan(child);
 			}
 		}
 	}
@@ -900,7 +887,7 @@ void mzSample::populateFilterline(const string& filterLine, Scan *_scan)
 	}
 }
 
-void mzSample::parseMzXMLScan(const xml_node &scan, const int& scannum)
+void mzSample::parseMzXMLScan(const xml_node &scan)
 {
 
     float rt = 0.0, precursorMz = 0.0, productMz = 0, collisionEnergy = 0;
@@ -967,7 +954,7 @@ void mzSample::parseMzXMLScan(const xml_node &scan, const int& scannum)
         return;
     }
 
-	Scan *_scan = new Scan(this, scannum, msLevel, rt, precursorMz, scanpolarity);
+	Scan *_scan = new Scan(this, scans.size(), msLevel, rt, precursorMz, scanpolarity);
 
 	if (!scanType.empty())
 		_scan->scanType = scanType;
@@ -1676,7 +1663,7 @@ int mzSample::parseCDF(const char *filename, int is_verbose)
 			else
 				polarity = -1;
 
-			Scan *myscan = new Scan(this, raw_data.actual_scan_no,
+			Scan *myscan = new Scan(this, scans.size(),
 									test_data.scan_function - (int)resolution_proportional,
 									raw_data.scan_acq_time / 60,
 									0,

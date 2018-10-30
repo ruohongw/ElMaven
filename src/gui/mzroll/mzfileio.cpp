@@ -424,9 +424,9 @@ mzSample* mzFileIO::parseMzData(QString fileName) {
         if (xml.isStartElement()) {
                 taglist << xml.name();
                 if (xml.name() == "spectrum") {
-                    scannum++;
                     if (!currentSample) currentSample = new mzSample();
                     currentScan = new Scan(currentSample,scannum,1,0,0,0);
+                    scannum++;
                 } else if (xml.name() == "cvParam" && currentScan) {
                     QString _name = xml.attributes().value("name").toString();
                     QString _value = xml.attributes().value("value").toString();
