@@ -371,6 +371,8 @@ void mzSample::parseMzMLChromatogramList(const xml_node &chromatogramList)
 				precision = 32;
 
 			string binaryDataStr = binaryDataArray.child("binary").child_value();
+			if (binaryDataStr.empty()) continue;
+
 			vector<float> binaryData = base64::decode_base64(
 				binaryDataStr, precision / 8, false, false);
 
@@ -512,18 +514,17 @@ void mzSample::parseMzMLSpectrumList(const xml_node &spectrumList)
 				precision = 32;
 
 			string binaryDataStr = binaryDataArray.child("binary").child_value();
-			if (!binaryDataStr.empty())
+			if (binaryDataStr.empty()) continue;
+			
+			vector<float> binaryData = base64::decode_base64(
+				binaryDataStr, precision / 8, false, false);
+			if (attr.count("m/z array"))
 			{
-				vector<float> binaryData = base64::decode_base64(
-					binaryDataStr, precision / 8, false, false);
-				if (attr.count("m/z array"))
-				{
-					mzVector = binaryData;
-				}
-				if (attr.count("intensity array"))
-				{
-					intsVector = binaryData;
-				}
+				mzVector = binaryData;
+			}
+			if (attr.count("intensity array"))
+			{
+				intsVector = binaryData;
 			}
 		}
 
@@ -615,8 +616,6 @@ void mzSample::parseMzData(const char *filename)
 		//cout << spectrum.first_element_by_path("spectrumDesc/spectrumSettings/spectrumInstrument").child_value() << endl
 		if (mslevel <= 0)
 			mslevel = 1;
-		Scan *scan = new Scan(this, scannum, mslevel, rt, precursorMz, scanpolarity);
-		addScan(scan);
 
 		int precision1 = spectrum.child("intenArrayBinary").child("data").attribute("precision").as_int();
 		string b64intensity = spectrum.child("intenArrayBinary").child("data").child_value();
@@ -632,6 +631,11 @@ void mzSample::parseMzData(const char *filename)
 			spectrum.child("mzArrayBinary").child("data").child_value();
 		scan->mz =
 			base64::decode_base64(b64mz, precision2 / 8, false, false);
+		
+		if (scan->mz.empty() || scan->intensity.empty()) continue;
+		
+		Scan *scan = new Scan(this, scannum, mslevel, rt, precursorMz, scanpolarity);
+		addScan(scan);
 
 		//cout << "spectrum " << spectrum.attribute("title").value() << endl;
 	}
@@ -1661,7 +1665,7 @@ int mzSample::parseCDF(const char *filename, int is_verbose)
 
 		if (!raw_data.points)
 		{ /* empty scan? */
-			break;
+			continue;
 		}
 		else
 		{ /* there are data points */
