@@ -12,6 +12,7 @@ CONFIG(debug, debug|release){
 QT += sql core  xml gui opengl
 
 CONFIG += silent exceptions
+DEFINES += ZLIB
 
 # this is important. Used in mzUtils to make use of correct mkdir function
 win32 {
@@ -19,7 +20,6 @@ win32 {
     DEFINES += MINGW
     DEFINES += WIN32
     DEFINES += CDFPARSER
-    DEFINES += ZLIB
     LIBS += -lcdfread -lnetcdf -lz
 }
 
