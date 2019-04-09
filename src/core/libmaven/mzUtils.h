@@ -389,7 +389,7 @@ namespace mzUtils {
      * @param  str               []
      * @return []
      */
-    std::string decompress_string(const std::string& str);
+    std::string decompressString(const std::string& str);
 
     /* rounding and ppm functions */
     /**
