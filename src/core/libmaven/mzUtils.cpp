@@ -939,8 +939,6 @@ Series:  Prentice-Hall Series in Automatic Computation
 
         } while (ret == Z_OK);
 
-        cerr << "B..." << "ret=" << ret;
-
         inflateEnd(&zs);
 
         if (ret != Z_STREAM_END) {          // an error occurred that was not EOF
@@ -950,7 +948,6 @@ Series:  Prentice-Hall Series in Automatic Computation
             // throw(std::runtime_error(oss.str()));
         }
 
-        cerr << "C...";
 #endif
         return outstring;
     }
