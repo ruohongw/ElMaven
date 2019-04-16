@@ -9,6 +9,8 @@
 #include "projectversioning.h"
 #include "schema.h"
 
+#include <numeric>
+
 #define BINT(x) boost::get<int>(x)
 #define BFLOAT(x) boost::get<float>(x)
 #define BDOUBLE(x) boost::get<double>(x)
