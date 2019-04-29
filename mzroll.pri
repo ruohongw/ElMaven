@@ -12,7 +12,7 @@ CONFIG(debug, debug|release){
 QT += sql core  xml gui opengl
 
 CONFIG += silent exceptions
-DEFINES += ZLIB
+DEFINES += ZLIB BOOST_IOSTREAMS_NO_LIB
 
 # this is important. Used in mzUtils to make use of correct mkdir function
 win32 {

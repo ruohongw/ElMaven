@@ -83,7 +83,8 @@ SOURCES = 	base64.cpp \
                 datastructures/mzSlice.cpp \
                 groupClassifier.cpp \
                 groupFeatures.cpp \
-                svmPredictor.cpp
+                svmPredictor.cpp \
+    zlib.cpp
 
 HEADERS += 	constants.h \
 		base64.h \
